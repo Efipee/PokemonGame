@@ -22,6 +22,7 @@ class Pokemon:
     def __str__(self):
         return f"{self.nome}[{self.vida} ❤] (LV: {self.level})"
 
+
     def atacar(self, pokemonAlvo):
         ataque_efetivo = int((self.ataque * random.random() * 1.3))
         pokemonAlvo.vida -= ataque_efetivo
@@ -33,6 +34,11 @@ class Pokemon:
             return True
         else:
             return False
+
+    def curar(self, pokemon_escolhido):
+        vida_total_pokemon = (pokemon_escolhido.level * 10)
+        self.vida = vida_total_pokemon
+        print(f"{pokemon_escolhido} curado com sucesso")
 
 
 class PokemonEletrico(Pokemon):

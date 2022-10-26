@@ -90,6 +90,7 @@ if __name__ == "__main__":
         print("1. Explorar pelo mundo")
         print("2. Lutar com um inimigo")
         print("3. Ver Pokedex")
+        print("4. Curar Pokemon")
         print("0. Sair do jogo")
         print("")
         escolha = input("Sua escolha: ")
@@ -106,5 +107,8 @@ if __name__ == "__main__":
             salvar_jogo(player)
         elif escolha == "3":
             player.mostrar_pokemons()
+        elif escolha == "4":
+            player.curar_pokemon()
+            salvar_jogo(player)
         else:
             print("Escolha invalida")

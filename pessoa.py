@@ -56,11 +56,10 @@ class Pessoa:
                     break
                 vitoria_inimiga = pokemon_inimigo.atacar(pokemon)
                 if vitoria_inimiga:
-                     print(f"{pessoa} ganhou a batalha!\n")
-                     break
-        else:
-            print("Essa batalha não pode ocorrer")
-
+                    print(f"{pessoa} ganhou a batalha!\n")
+                    break
+            else:
+                print("Essa batalha não pode ocorrer")
 
     def mostrar_dinheiro(self):
         print(f"Você possui $ {self.dinheiro} em sua conta")
@@ -70,19 +69,19 @@ class Pessoa:
         print(f"Você ganhou $ {quantidade}")
         self.mostrar_dinheiro()
 
-
+    def remover_dinheiro(self, quantidade):
+        self.dinheiro - quantidade
+        print(f"Isso te custou $ {quantidade}, seu saldo agora é de $ {self.dinheiro}")
 
     def escolher_pokemon(self):
         while True:
             if self.pokemons:
                 pokemon_escolhido = random.choice(self.pokemons)
                 print(f"{self} escolheu {pokemon_escolhido} \n")
-                if pokemon_escolhido.vida <= 0:
-                    print("Pokemon ferido! Escolha outro Pokemon")
-                else:
-                    return pokemon_escolhido
+                return pokemon_escolhido
             else:
                 print("ERRO: esse jogador não tem nenhum Pokemon para ser escolhido")
+
 
 
 class Player(Pessoa):
@@ -100,10 +99,14 @@ class Player(Pessoa):
                 escolha = input("Escolha seu Pokemon: ")
                 print("")
                 try:
-                    escolha = int(escolha)-1
+                    escolha = int(escolha) - 1
                     pokemon_escolhido = self.pokemons[escolha]
-                    print(f"{pokemon_escolhido} eu escolho você!!!!!")
-                    return pokemon_escolhido
+                    if pokemon_escolhido.vida > 0:
+                        print(f"{pokemon_escolhido} eu escolho você!!!!!")
+                        return pokemon_escolhido
+                    else:
+                        print(f"{pokemon_escolhido} está ferido, cure ele!")
+                        return False
                 except:
                     print("Escolha inválida!")
         else:
@@ -128,11 +131,39 @@ class Player(Pessoa):
                             print(f"O {pokemon} fugiu, boa sorte da próxima vez :(")
 
             else:
-               print("Ok, tenha uma boa viagem!")
+                print("Ok, tenha uma boa viagem!")
 
 
         else:
             print("Essa exploração não deu em nada")
+
+
+    def curar_pokemon(self, pokemon_escolhido=None):
+        self.mostrar_pokemons()
+        if self.pokemons:
+            while True:
+                escolha = input("Escolha seu Pokemon: ")
+                escolha = int(escolha) - 1
+                pokemon_escolhido = self.pokemons[escolha]
+                vida_total_pokemon = (pokemon_escolhido.level * 10)
+                valor_tratamento = int((vida_total_pokemon - pokemon_escolhido.vida) * 10)
+                if pokemon_escolhido.vida >= vida_total_pokemon:
+                    print("Não é possivel curar um Pokemon com a vida cheia!")
+                    break
+                if self.dinheiro <= valor_tratamento:
+                    print("Sem dinheiro suficiente :(")
+                    self.mostrar_dinheiro()
+                    break
+                else:
+                    self.mostrar_dinheiro()
+                    tratamento_escolha = input(f"O valor do tratamento é de: $ {valor_tratamento} deseja concluir? (s/n): ")
+                    if tratamento_escolha == "s":
+                        self.remover_dinheiro(valor_tratamento)
+                        pokemon_escolhido.curar(pokemon_escolhido)
+                        break
+                    else:
+                        print("Volte sempre no PokeCenter!")
+                        break
 
 
 class Inimigo(Pessoa):
@@ -147,6 +178,3 @@ class Inimigo(Pessoa):
             super().__init__(nome=nome, pokemons=pokemons_aleatorios)
         else:
             super().__init__(nome=nome, pokemons=pokemons)
-
-
-
